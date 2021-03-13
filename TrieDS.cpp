@@ -11,6 +11,7 @@ public:
 	TrieNode(char data) {
 		this->data = data;
 		children = new TrieNode*[26];
+		// initializing all child nodes as NULL
 		for (int i = 0; i < 26; i++) {
 			children[i] = NULL;
 		}
@@ -118,6 +119,7 @@ class Trie {
 			int index = input[i] - 'a';
 			// no such prefix exist then return
 			if (temp->children[index] == NULL) {
+				cout << input << endl;
 				return;
 			}
 			temp = temp->children[index];
@@ -182,7 +184,11 @@ int main() {
 		t.insert(words);
 	}
 
-// Testing
+	t.autoSuggest("alchem");
+	cout << endl;
+
+
+	// Testing
 	// t.insert("abc");
 	// t.insert("abcd");
 	// t.insert("ghi");
@@ -201,11 +207,6 @@ int main() {
 	// t.remove("abc");
 	// t.display();
 	// cout << endl;
-
-	t.autoSuggest("alchem");
-	cout << endl;
-
-
 
 	return 0;
 
