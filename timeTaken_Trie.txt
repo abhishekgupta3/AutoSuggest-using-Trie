@@ -1,0 +1,1 @@
+Time taken by Trie's prefix search for first 100 words: 62505 microseconds

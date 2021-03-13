@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 
 // TrieNode class
 class TrieNode {
@@ -170,6 +172,16 @@ public:
 
 };
 
+
+void prefixSearchTrie(Trie t, vector<string> v) {
+
+	// prefix search for first 100 words
+	for (int i = 0; i < 100; ++i) {
+		t.autoSuggest(v[i]);
+	}
+}
+
+
 int main() {
 
 #ifndef ONLINE_JUDGE
@@ -178,14 +190,30 @@ int main() {
 #endif
 
 	Trie t;
+
+	vector <string> v; //stores all the 20,000 strings
+
 	for (int i = 0; i < 20000; i++) {
 		string words;
 		cin >> words;
 		t.insert(words);
+		v.push_back(words);
 	}
 
-	t.autoSuggest("alchem");
-	cout << endl;
+	cout << "Suggestions for camp " << endl;
+	t.autoSuggest("camp");
+
+	// auto start = high_resolution_clock::now();
+
+	// prefixSearchTrie(t, v);
+
+	// auto stop = high_resolution_clock::now();
+
+	// auto duration = duration_cast<microseconds>(stop - start);
+
+	// cout << "Time taken by Trie's prefix search for first 100 words: "
+	//      << duration.count() << " microseconds" << endl;
+
 
 
 	// Testing
