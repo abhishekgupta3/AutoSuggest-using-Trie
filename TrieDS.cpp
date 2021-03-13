@@ -22,6 +22,17 @@ public:
 class Trie {
 	TrieNode* root;
 
+	// whether the given node has child
+	bool hasChild(TrieNode* root) {
+
+		for (int i = 0; i < 26; ++i) {
+			if (root->children[i] != NULL) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	// insert util function
 	void insertUtil(string input, TrieNode* root) {
 		// Base case
@@ -48,13 +59,10 @@ class Trie {
 		// Base case
 		if (input.length() == 0) return root->isEnd;
 
-		TrieNode * child;
 		int index = input[0] - 'a';
 
 		if (root->children[index] == NULL) return false;
-		else child = root->children[index];
-
-		return searchUtil(input.substr(1), child);
+		return searchUtil(input.substr(1), root->children[index]);
 	}
 
 	// remove util function
@@ -85,33 +93,46 @@ class Trie {
 		}
 	}
 
-	void display(string s, TrieNode* root) {
+	void displayUtil(string s, TrieNode* root) {
+		// if the given char is end of word print it
+		if (root->isEnd == true) {
+			cout << s << endl;
+		}
+
+		// for all children in root if not NULL recursively call its children
 		for (int i = 0; i < 26; i++) {
 			if (root->children[i] != NULL) {
-				if (root->children[i]->isEnd) {
-					cout << s << root->children[i]->data;
-					cout << endl;
-				}
-				display(s + root->children[i]->data, root->children[i]);
+				displayUtil(s + root->children[i]->data, root->children[i]);
 			}
 		}
-		return;
 	}
 
 	// auto suggest util function
-	void autoSuggestUtil(string input, string s , TrieNode* root) {
-		// Base case
-		if (input.length() == 0) {
-			display(s, root);
+	void autoSuggestUtil(string input, TrieNode* root) {
+
+		TrieNode * temp = root;
+		int len = input.length();
+
+		// traversing the given input string
+		for (int i = 0; i < len; i++) {
+			int index = input[i] - 'a';
+			// no such prefix exist then return
+			if (temp->children[index] == NULL) {
+				return;
+			}
+			temp = temp->children[index];
 		}
 
-		TrieNode * child;
-		int index = input[0] - 'a';
+		// if it is end node and has no children print the input string
+		if (temp->isEnd and hasChild(temp) == false) {
+			cout << input << endl;
+			return;
+		}
 
-		if (root->children[index] == NULL) return;
-		else child = root->children[index];
-
-		return autoSuggestUtil(input.substr(1), s, child);
+		// print the subtree
+		if (hasChild(root)) {
+			displayUtil(input, temp);
+		}
 	}
 
 public:
@@ -135,10 +156,14 @@ public:
 		removeUtil(input, root);
 	}
 
+	// display
+	void display() {
+		displayUtil("", root);
+	}
+
 	// auto suggest
 	void autoSuggest(string input) {
-		string s = input;
-		autoSuggestUtil(input, s, root);
+		autoSuggestUtil(input, root);
 	}
 
 };
@@ -157,10 +182,28 @@ int main() {
 		t.insert(words);
 	}
 
+// Testing
+	// t.insert("abc");
+	// t.insert("abcd");
+	// t.insert("ghi");
+	// t.insert("abcd");
+	// t.insert("ghifg");
+	// t.insert("abbcd");
+	// t.insert("ghhii");
+	// t.insert("abccd");
+	// t.insert("uvai");
+
+	// cout << "abc " << t.search("abc") << endl;
 	// cout << "pass " << t.search("pass") << endl;
 	// cout << "abcd " << t.search("abcd") << endl;
+	// cout << "abc " << t.search("abc") << endl;
+	// cout << endl;
+	// t.remove("abc");
+	// t.display();
+	// cout << endl;
 
-	t.autoSuggest("an");
+	t.autoSuggest("alchem");
+	cout << endl;
 
 
 
